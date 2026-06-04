@@ -1,4 +1,5 @@
 import socket
+from tracemalloc import stop
 
 def demarrer_serveur():
     # 1. Création du socket (IPv4, protocole TCP)
@@ -19,18 +20,25 @@ def demarrer_serveur():
     client_socket, client_address = serveur_socket.accept()
     print(f"[+] Connexion acceptée depuis {client_address[0]}:{client_address[1]}")
     
-    # 5. Réception des données (1024 octets max)
-    donnees_recues = client_socket.recv(1024).decode('utf-8')
-    print(f"[>] Message du client : {donnees_recues}")
+    while True:
     
-    # 6. Réponse au client
-    reponse = "Hello Client ! Message bien reçu, fin de transmission."
-    client_socket.send(reponse.encode('utf-8'))
+        donnees_recues = client_socket.recv(1024).decode('utf-8')
+        if donnees_recues.strip().lower() =="stop":
+            print("Arrêt")
+            break
+
+        # 5. Réception des données (1024 octets max)
+        print(f"[>] Message du client : {donnees_recues}")
+        break
     
-    # 7. Fermeture propre des sockets
-    client_socket.close()
-    serveur_socket.close()
-    print("[*] Serveur éteint.")
+        # 6. Réponse au client
+        reponse = "Hello Client ! Message bien reçu, fin de transmission."
+        client_socket.send(reponse.encode('utf-8'))
+
+        # 7. Fermeture propre des sockets
+        client_socket.close() 
+        serveur_socket.close()
+        print("[*] Serveur éteint.")
 
 if __name__ == "__main__":
     demarrer_serveur()

@@ -1,1 +1,1 @@
-# tcp-chat-basique-tp5
+# TP sur le socket TCP connexion client-serveur.

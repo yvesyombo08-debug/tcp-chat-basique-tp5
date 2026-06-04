@@ -1,3 +1,4 @@
+from os import link
 import socket
 
 def demarrer_client():
@@ -14,18 +15,27 @@ def demarrer_client():
         client_socket.connect((host, port))
         print("[+] Connecté au serveur !")
         
-        # 3. Envoi du message initial
-        message = "Hello Serveur"
-        client_socket.send(message.encode('utf-8'))
-        print(f"[<] Message envoyé : '{message}'")
+        while True:
+            reponse = input("Tapez 'link' pour envoyer le messagee :")
+            if reponse == "link":
+                # 3. Envoi du message initial
+                message = "Hello Serveur"
+                client_socket.send(message.encode('utf-8'))
+                print(f"[<] Message envoyé : '{message}'")
         
-        # 4. Réception de la réponse du serveur
-        reponse = client_socket.recv(1024).decode('utf-8')
-        print(f"[<] Réponse du serveur : {reponse}")
-        
+                # 4. Réception de la réponse du serveur
+                reponse = client_socket.recv(1024).decode('utf-8')
+                print(f"[<] Réponse du serveur : {reponse}")
+    
+            else:
+                message = "Stop"
+                client_socket.send(message.encode('utf-8'))
+                print("Communication arrêté")
+                break
+
     except ConnectionRefusedError:
         print("[-] Erreur : Le serveur est introuvable. Est-il bien lancé ?")
-        
+
     finally:
         # 5. Fermeture de la connexion
         client_socket.close()
